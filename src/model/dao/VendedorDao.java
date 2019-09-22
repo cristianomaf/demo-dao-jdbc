@@ -2,6 +2,7 @@ package model.dao;
 
 import java.util.List;
 
+import model.entities.Departamento;
 import model.entities.Vendedor;
 
 public interface VendedorDao {
@@ -15,6 +16,6 @@ public interface VendedorDao {
 	Vendedor findById(Integer Id); // vai ser implementada para procura dos departmentos por id
 
 	List<Vendedor> findAll(); // lista que vai ter todos os departamentos
-
+	List <Vendedor> findByDepartment (Departamento departamento);
 
 }
