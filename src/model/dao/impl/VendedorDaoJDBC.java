@@ -51,20 +51,11 @@ public class VendedorDaoJDBC implements VendedorDao {
 			st.setInt(1, id);
 			rs = st.executeQuery();
 
-			// verifica se tem resultado
+			// verifica se tem resultado e instancia um dep e um vendedor com o departamento
 			if (rs.next()) {
-				Departamento dep = new Departamento();
-				dep.setId(rs.getInt("DepartmentId"));
-				dep.setNome(rs.getString("DepName"));
+				Departamento dep = instanciaDepartamento(rs);
 
-				Vendedor obj = new Vendedor();
-				obj.setId(rs.getInt("Id"));
-				obj.setNome(rs.getString("Name"));
-				obj.setEmail(rs.getString("Email"));
-				obj.setSalarioBase(rs.getDouble("BaseSalary"));
-				obj.setNascimento(rs.getDate("BirthDate"));
-
-				obj.setDepartamento(dep);
+				Vendedor obj = instanciaVendedor(rs, dep);
 
 				return obj;
 
@@ -79,6 +70,27 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 		}
 
+	}
+
+	
+	private Vendedor instanciaVendedor(ResultSet rs, Departamento dep) throws SQLException {
+		Vendedor obj = new Vendedor();
+		obj.setId(rs.getInt("Id"));
+		obj.setNome(rs.getString("Name"));
+		obj.setEmail(rs.getString("Email"));
+		obj.setSalarioBase(rs.getDouble("BaseSalary"));
+		obj.setNascimento(rs.getDate("BirthDate"));
+
+		obj.setDepartamento(dep);
+		return obj;
+	}
+
+	//metodo instancia departamento sem tratar excecao pois ja sera tratada 
+	private Departamento instanciaDepartamento(ResultSet rs) throws SQLException {		
+		Departamento dep = new Departamento();
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setNome(rs.getString("DepName"));
+		return dep;
 	}
 
 	@Override
