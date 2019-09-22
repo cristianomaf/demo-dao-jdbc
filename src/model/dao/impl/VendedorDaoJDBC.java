@@ -29,23 +29,19 @@ public class VendedorDaoJDBC implements VendedorDao {
 	public void insert(Vendedor obj) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement(
-					"INSERT INTO seller "
-							+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
-							+ "VALUES "
-							+ "(?, ?, ?, ?, ?)",
-							Statement.RETURN_GENERATED_KEYS);
+			st = conn.prepareStatement("INSERT INTO seller " + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES " + "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			st.setString(1, obj.getNome());
 			st.setString(2, obj.getEmail());
-			st.setDate(3,new java.sql.Date(obj.getNascimento().getTime()));
+			st.setDate(3, new java.sql.Date(obj.getNascimento().getTime()));
 			st.setDouble(4, obj.getSalarioBase());
 			st.setInt(5, obj.getDepartamento().getId());
-			
+
 			int linhasAfetadas = st.executeUpdate();
-			
-			if(linhasAfetadas > 0) {
+
+			if (linhasAfetadas > 0) {
 				ResultSet rs = st.getGeneratedKeys();
-				if(rs.next()) {
+				if (rs.next()) {
 					int id = rs.getInt(1);
 					obj.setId(id);
 				}
@@ -55,16 +51,34 @@ public class VendedorDaoJDBC implements VendedorDao {
 			}
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
-			
+
 		}
 	}
 
 	@Override
 	public void update(Vendedor obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("UPDATE seller "
+					+ "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " + "WHERE Id = ?");
+
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new java.sql.Date(obj.getNascimento().getTime()));
+			st.setDouble(4, obj.getSalarioBase());
+			st.setInt(5, obj.getDepartamento().getId());
+			st.setInt(6, obj.getId());
+
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+
+		}
 
 	}
 
